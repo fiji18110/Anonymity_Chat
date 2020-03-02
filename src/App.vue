@@ -1,21 +1,14 @@
 <template>
   <div id="app">
-    <!-- 名前の入力欄 -->
     <label for="nameInput">名前</label>
     <input type="txt" id="nameInput" v-model="name">
-
-    <!-- メッセージの入力欄 -->
     <label for="nameInput">メッセージ</label>
     <input type="txt" id="nameInput" v-model="message">
-
-    <!-- ボタン類 -->
     <div>
       <button type="button" class="btn btn-default" @click="sendMessage">
         送信
       </button>
     </div>
-
-    <!-- リスト -->
     <div>
       <ul>
         <li v-for="(item,key) in list" :key="key">{{item.name}} / {{item.message}}</li>
@@ -30,18 +23,17 @@ export default {
   name: 'app',
   data () {
     return {
-      list: [], // 最新状態はここにコピーされる
-      name: '', // 名前
-      message: ''// 送信メッセージ
+      list: [],
+      name: '',
+      message: ''// 送信されたメッセージ
     }
   },
   created () {
     this.listen()
   },
   methods: {
-    // データベースの変更を購読、最新状態をlistにコピーする
     listen () {
-      firebase.database().ref('myBoard/').on('value', snapshot => { // eslint-disable-line
+      firebase.database().ref('myBoard/').on('value', snapshot => {
         if (snapshot) {
           const rootList = snapshot.val()
           let list = []
@@ -54,15 +46,11 @@ export default {
       })
     },
     sendMessage () {
-      // 空欄の場合は実行しない
       if (!this.name || !this.message) return
-      // 送信
       firebase.database().ref('myBoard/').push({
         name: this.name,
         message: this.message
       })
-      // 送信後inputを空にする
-      this.name = ''
       this.message = ''
     }
   }
