@@ -1,12 +1,13 @@
 <template>
   <div id="app">
-    <label for="nameInput">名前</label>
-    <input type="txt" id="nameInput" v-model="name">
-    <label for="nameInput">メッセージ</label>
-    <input type="txt" id="nameInput" v-model="message">
+    <label>name :</label>
+    <input type="txt" class="nameInput" v-model="name" placeholder="name">
+    <br>
+    <label>message :</label>
+    <input type="txt" class="nameInput" v-model="message" placeholder="message">
     <div>
-      <button type="button" class="btn btn-default" @click="sendMessage">
-        送信
+      <button type="button" class="btn-default" @click="sendMessage">
+        send
       </button>
     </div>
     <div>
@@ -56,3 +57,20 @@ export default {
   }
 }
 </script>
+<style scoped>
+.nameInput{
+  font-weight: bold;
+  border: solid 1px #000000;
+  border-radius: 4px;
+}
+.btn-default{
+  position: relative;
+  display: inline-block;
+  padding: 0.25em 0.5em;
+  text-decoration: none;
+  border-radius: 4px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.2);
+  text-shadow: 0 1px 0 rgba(0,0,0,0.2);
+}
+
+</style>
