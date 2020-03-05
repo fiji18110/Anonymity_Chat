@@ -1,19 +1,22 @@
 <template>
   <div id="app">
-    <label>name :</label>
-    <input type="txt" class="nameInput" v-model="name" placeholder="name">
-    <br>
-    <label>message :</label>
-    <input type="txt" class="nameInput" v-model="message" placeholder="message">
-    <div>
-      <button type="button" class="btn-default" @click="sendMessage">
-        send
-      </button>
+    <div class="head">
+      <label>message</label>
+      <input type="text" class="nameInput" v-model="message" placeholder="message">
+      <div>
+        <button type="button" class="btn-default" @click="sendMessage">
+          send
+        </button>
+      </div>
     </div>
     <div>
-      <ul>
-        <li v-for="(item,key) in list" :key="key">{{item.name}} / {{item.message}}</li>
-      </ul>
+      <ol class="list_wrap">
+        <li class="summary" v-for="(item,key) in list" :key="key">
+          <span>{{item.name}}</span>
+          <br>
+          <span class="message_summary">{{item.message}}</span>
+        </li>
+      </ol>
     </div>
   </div>
 </template>
@@ -24,13 +27,25 @@ export default {
   name: 'app',
   data () {
     return {
-      list: [],
+      user: {},
       name: '',
+      list: [],
       message: ''// 送信されたメッセージ
     }
   },
   created () {
+    this.user = firebase.auth().currentUser
     this.listen()
+  },
+  mounted () {
+    firebase.auth().onAuthStateChanged(function (user) {
+      if (user) {
+        console.log('login')
+      } else {
+        const provider = new firebase.auth.GoogleAuthProvider()
+        firebase.auth().signInWithPopup(provider)
+      }
+    })
   },
   methods: {
     listen () {
@@ -47,21 +62,34 @@ export default {
       })
     },
     sendMessage () {
-      if (!this.name || !this.message) return
+      if (!this.message) return
       firebase.database().ref('myBoard/').push({
-        name: this.name,
+        name: this.getUserName(),
         message: this.message
       })
       this.message = ''
+    },
+    getUserName () {
+      return firebase.auth().currentUser.displayName
+    },
+    doLogin () {
+      const provider = new firebase.auth.GoogleAuthProvider()
+      firebase.auth().signInWithPopup(provider)
+    },
+    doLogout () {
+      firebase.auth().signOut()
     }
   }
 }
 </script>
+
 <style scoped>
 .nameInput{
   font-weight: bold;
   border: solid 1px #000000;
   border-radius: 4px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 .btn-default{
   position: relative;
@@ -71,6 +99,42 @@ export default {
   border-radius: 4px;
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.2);
   text-shadow: 0 1px 0 rgba(0,0,0,0.2);
+  margin-bottom: 1em;
 }
-
+.list_wrap{
+  list-style:  none;
+  margin-top:  70px;
+  padding: 0;
+}
+.summary:before {
+    content:  "";
+    width: 20px;
+    height: 20px;
+    display:  inline-block;
+    background-color: #0074bf;
+    position:  relative;
+    top: 3px;
+    border-radius:  50%;
+    margin-right: 5px;
+}
+.summary{
+    padding:  10px;
+    background-color:  #65ace4;
+    border-radius:  10px;
+    margin-bottom: 5px;
+    color: #fff;
+    font-size:  16px;
+}
+.message_summary{
+  margin-left: 50px;
+}
+.head{
+  display: block;
+  background: #fff;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  z-index: 100;
+}
 </style>
