@@ -30,7 +30,7 @@ export default {
       user: {},
       name: '',
       list: [],
-      message: ''// 送信されたメッセージ
+      message: ''
     }
   },
   created () {
