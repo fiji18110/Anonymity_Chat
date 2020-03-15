@@ -1,14 +1,14 @@
 <template>
   <div id="app">
     <div class="head" v-if="this.show">
+      <b-button size="sm" class="logout_btn" @click="doLogout">
+          ログアウト
+      </b-button>
       <label>message</label>
       <input type="text" class="nameInput" v-model="message" placeholder="message">
       <div>
         <b-button size="sm" class="btn-default" @click="sendMessage">
           send
-        </b-button>
-        <b-button size="sm" class="btn-default" @click="doLogout">
-          ログアウト
         </b-button>
       </div>
     </div>
@@ -118,7 +118,7 @@ export default {
 }
 .list_wrap{
   list-style:  none;
-  margin-top:  70px;
+  margin-top:  110px;
   padding: 0;
 }
 .summary:before {
@@ -151,5 +151,8 @@ export default {
   left: 0px;
   width: 100%;
   z-index: 100;
+}
+.logout_btn{
+  float: right;
 }
 </style>
