@@ -1,13 +1,21 @@
 <template>
   <div id="app">
-    <div class="head">
+    <div class="head" v-if="this.show">
       <label>message</label>
       <input type="text" class="nameInput" v-model="message" placeholder="message">
       <div>
-        <button type="button" class="btn-default" @click="sendMessage">
+        <b-button size="sm" class="btn-default" @click="sendMessage">
           send
-        </button>
+        </b-button>
+        <b-button size="sm" class="btn-default" @click="doLogout">
+          ログアウト
+        </b-button>
       </div>
+    </div>
+    <div class="head" v-else>
+      <b-button size="sm" class="btn-default" @click="doLogin">
+          ログイン
+      </b-button>
     </div>
     <div>
       <ol class="list_wrap">
@@ -30,24 +38,31 @@ export default {
       user: {},
       name: '',
       list: [],
-      message: ''
+      message: '',
+      show: false
     }
   },
   created () {
     this.user = firebase.auth().currentUser
     this.listen()
-  },
-  mounted () {
-    firebase.auth().onAuthStateChanged(function (user) {
+    firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        console.log('login')
+        this.show = true
       } else {
-        const provider = new firebase.auth.GoogleAuthProvider()
-        firebase.auth().signInWithPopup(provider)
+        this.show = false
       }
     })
   },
   methods: {
+    onAuthStateChanged () {
+      firebase.auth().onAuthStateChanged(function (user) {
+        if (user) {
+          this.show = true
+        } else {
+          this.show = false
+        }
+      })
+    },
     listen () {
       firebase.database().ref('myBoard/').on('value', snapshot => {
         if (snapshot) {
@@ -99,7 +114,7 @@ export default {
   border-radius: 4px;
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.2);
   text-shadow: 0 1px 0 rgba(0,0,0,0.2);
-  margin-bottom: 1em;
+  margin-bottom: 1px;
 }
 .list_wrap{
   list-style:  none;

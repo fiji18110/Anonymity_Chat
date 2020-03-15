@@ -4,10 +4,14 @@ import App from './App'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import VueClipboard from 'vue-clipboard2'
+import BootstrapVue from 'bootstrap-vue'
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 // Vue.use(Meta)
 VueClipboard.config.autoSetContainer = true // add this line
 
+Vue.use(BootstrapVue)
 Vue.use(VueClipboard)
 Vue.use(VueAxios, axios)
 var VueCookie = require('vue-cookie')
